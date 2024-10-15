@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        input {
+            box-sizing: border-box;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .header-right {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            align-content: center;
+            align-items: center;
+        }
+
+        .detail-book-quantity {
+            width: 200px;
+            box-sizing: border-box;
+            display: flex;
+            height: 30px;
+            align-items: center;
+        }
+
+        .detail-book-quantity-input {
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .up-arrow, .down-arrow {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="/fragments/header :: header"/>
+
+    <div class="detail-book-container">
+        <div>
+            <h3 th:text="${book.bookName}"/>
+        </div>
+        <div class="detail-book-quantity">
+            <span class="down-arrow">▾</span>
+            <input id="input-quantity" class="detail-book-quantity-input" type="number" readonly min="1" th:value="1">
+            <span class="up-arrow">▴</span>
+            <input type="hidden" th:value="${book.price}" id="detail-book-price-unit">
+            <div id='price-display' th:text="${book.price}" th:value="${book.price}"></div>
+        </div>
+        <button th:onclick="|order(${book.id}, '${book.bookName}')|">바로구매</button>
+        <button>장바구니</button>
+    </div>
+</body>
+    <script>
+        // Assume the price per unit is passed from the server-side
+        // const pricePerUnit = parseInt(document.getElementById("price-display").value) // Example value
+        const pricePerUnit = parseInt(document.getElementById("detail-book-price-unit").value);
+        function updatePrice(quantity) {
+            const totalPrice = pricePerUnit * quantity;
+            document.getElementById('price-display').textContent = totalPrice;
+        }
+
+        document.querySelector('.up-arrow').addEventListener('click', function() {
+            let quantityInput = document.getElementById('input-quantity');
+            let currentValue = parseInt(quantityInput.value);
+            quantityInput.value = currentValue + 1; // Increase the value
+            updatePrice(quantityInput.value); // Update the price
+        });
+
+        document.querySelector('.down-arrow').addEventListener('click', function() {
+            let quantityInput = document.getElementById('input-quantity');
+            let currentValue = parseInt(quantityInput.value);
+            if (currentValue > 1) {
+                quantityInput.value = currentValue - 1; // Decrease the value only if greater than 1
+                updatePrice(quantityInput.value); // Update the price
+            }
+        });
+        // Initialize the price display on page load
+        const order = async (bookId, bookName) => {
+            try {
+
+                const res = await axios.post("/orders", {
+                    bookId,
+                    price: pricePerUnit,
+                    bookName
+                })
+                console.log(res);
+            }catch (error) {
+                console.log(error)
+            }
+        }
+        updatePrice(document.getElementById('input-quantity').value);
+</script>
+</html>

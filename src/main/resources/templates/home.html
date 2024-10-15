@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+    }
+    .header-right {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        align-content: center;
+        align-items: center;
+    }
+</style>
+<body>
+<div>
+    <div th:replace="fragments/header :: header"/>
+
+    <div th:each="b : ${book}">
+        <div class="books-info">
+            <a href="" th:href="@{/books/{bookId} (bookId=${b.id})}" th:text="${b.bookName}"></a>
+            <p th:text="${b.price} + '원'"></p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

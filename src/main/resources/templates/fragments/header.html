@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="header" class="header-container">
+    <div class="header-left"><h3>HOME</h3></div>
+    <div class="header-right">
+        <a href="#" th:href="@{/signin}" th:if="${session.member == null}">로그인</a>
+        <span th:if="${session.member != null}" th:text="${session.member.email} + '님'"></span>
+        <a href="#" th:if="${session.member == null}">회원가입</a>
+        <a href="" th:if="${session.member != null}">장바구니</a>
+    </div>
+</div>
+

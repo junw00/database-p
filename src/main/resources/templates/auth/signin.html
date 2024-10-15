@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<body>
+
+<input type="text" name="id" placeholder="아이디 입력" class="id">
+<input type="password" name="password" placeholder="비밀번호 입력" class="password">
+<button onclick="login()">로그인</button>
+</body>
+<script>
+    const login = async () => {
+        try {
+            const email = document.querySelector('.id').value;
+            const password = document.querySelector('.password').value;
+            console.log(email)
+            const response = await axios.post('http://localhost:8080/users', {
+                email,
+                password
+            });
+            if (response.status === 200) {
+                window.location.href="http://localhost:8080/"
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    };
+</script>
+</html>
